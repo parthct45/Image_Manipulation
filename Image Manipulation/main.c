@@ -305,6 +305,61 @@ int main(int argc, char *argv[])
             free(r2);
         }
 
+        if (strcmp(argv[1], "-s") == 0)
+        {
+            unsigned int i;
+            int threshold, width, height;
+
+            pixels **r1;
+            pixels **r2;
+
+            qtNode *t1 = NULL;
+            qtNode *t2 = NULL;
+
+            threshold = atoi(argv[2]);
+
+            r1 = read(&height, &width, argv[3]);
+            r2 = read(&height, &width, argv[4]);
+
+            compressImage(r1, &t1, 0, 0, width, threshold);
+            compressImage(r2, &t2, 0, 0, width, threshold);
+
+            qtNode *node_overlay = NULL;
+            sepia(t1, &node_overlay);
+
+            // Alloc rgb matrix
+            pixels **mat = (pixels **)malloc(sizeof(pixels *) * width);
+            for (i = 0; i < width; i++)
+            {
+                mat[i] = malloc(sizeof(pixels) * width);
+            }
+
+            decompressImage(node_overlay, &mat, 0, 0, width);
+            outputFile(mat, argv[5], width);
+
+            // Free
+            destroyTree(&t1);
+            destroyTree(&t2);
+
+            for (i = 0; i < width; i++)
+            {
+                free(mat[i]);
+            }
+            free(mat);
+
+            for (i = 0; i < height; i++)
+            {
+                free(r1[i]);
+            }
+            free(r1);
+
+            for (i = 0; i < height; i++)
+            {
+                free(r2[i]);
+            }
+            free(r2);
+        }
+
         // union of two images
         else
         {

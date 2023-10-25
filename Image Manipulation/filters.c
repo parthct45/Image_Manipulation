@@ -57,3 +57,32 @@ void negativeImage(qtNode *t1, qtNode **res)
     return;
 }
 
+void sepia(qtNode* t1,qtNode** res)
+{
+    (*res) = malloc(sizeof(qtNode));
+
+    if (t1->topLeft != NULL)
+    {
+        sepia(t1->topLeft, &(*res)->topLeft);
+        sepia(t1->topRight, &(*res)->topRight);
+        sepia(t1->bottomLeft, &(*res)->bottomLeft);
+        sepia(t1->bottomRight, &(*res)->bottomRight);
+    }
+
+    else
+    {
+
+        (*res)->topRight = NULL;
+        (*res)->topLeft = NULL;
+        (*res)->bottomLeft = NULL;
+        (*res)->bottomRight = NULL;
+    }
+
+    (*res)->area = t1->area;
+    (*res)->p.red = 0.393*t1->p.red+0.769*t1->p.green+0.189*t1->p.blue;
+    (*res)->p.blue = 0.349*t1->p.red+0.686*t1->p.green+0.168*t1->p.blue;
+    (*res)->p.green = 0.272*t1->p.red+0.534*t1->p.green+0.131*t1->p.blue;
+    (*res)->area = t1->area;
+    return;
+
+}
